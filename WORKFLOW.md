@@ -77,7 +77,7 @@
 
 **B.H.U.M.I.** is a hybrid blockchain-based digital land registry platform that connects citizens, local land authorities, government headquarters, traditional databases, secure document storage, payment systems, and blockchain infrastructure.
 
-The primary goal is **not to replace existing government land databases**, but to introduce a blockchain-based **proof and audit layer** for verified property records.
+The primary goal is **not to replace existing government land databases**, but to introduce a blockchain-based **proof and audit layer** for verified property records. Think of the blockchain as a *digital registry book*: it holds proof of the official state, while the government database and sensitive documents stay off-chain.
 
 B.H.U.M.I. allows:
 
@@ -159,6 +159,8 @@ Citizens can:
 - **Track application / appointment status**
 - **Download the e-Registry PDF** for a registered property
 - View ownership history
+
+Citizens cannot write to the blockchain directly.
 
 ### 2. 🏛️ Government Portal
 
@@ -450,7 +452,9 @@ The user sees a simple checkout:
 > ₹25,000
 > **[ Pay Now ]**
 
-The backend handles the blockchain infrastructure.
+not `0.004 ETH` / `[Connect Wallet]`.
+
+The backend handles the blockchain infrastructure. The smart contract does not handle INR directly.
 
 ### ⛽ Blockchain Gas Model
 
@@ -468,11 +472,13 @@ Instead, this happens behind the scenes:
 ```mermaid
 flowchart LR
     A["Citizen Pays ₹ via Gateway"] --> B["Backend Confirms Payment"]
-    B --> C["Backend-Managed Wallet Pays Gas"]
+    B --> C["Backend-Managed Registrar Wallet Pays Gas"]
     C --> D["Property Registered On-Chain"]
 ```
 
 This creates a Web2-like experience for citizens while blockchain operates as the underlying infrastructure.
+
+**Prototype setup:** deploy to an Ethereum testnet such as **Sepolia** and fund the registrar wallet with test ETH from a faucet. The registrar private key (`REGISTRAR_PRIVATE_KEY`) lives only in the backend environment / secrets manager, never in the frontend or source control.
 
 ---
 
@@ -609,7 +615,7 @@ B.H.U.M.I. follows several security principles.
 - Authorized registrar wallet
 - Backend-controlled transactions
 - No private keys in frontend
-- Secure environment variables
+- Secure environment variables / secrets manager
 - Transaction logging
 - Smart contract access control
 
@@ -637,7 +643,7 @@ B.H.U.M.I. follows several security principles.
 
 **Blockchain**
 - Solidity
-- Ethereum-compatible blockchain
+- Ethereum-compatible blockchain (Sepolia testnet for the prototype)
 - Hardhat / Foundry
 - ethers.js
 
